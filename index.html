@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyberbullying Awareness Game</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+
+    .game-container {
+      background: #ffffff;
+      width: 90%;
+      max-width: 700px;
+      padding: 0 30px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      animation: fadeIn 1s ease-in-out;
+      overflow: hidden;
+    }
+
+    .banner {
+      background: linear-gradient(135deg, #ff512f, #f09819);
+      color: #fff;
+      padding: 25px 20px;
+      text-align: center;
+    }
+
+    .banner h2 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .banner p {
+      margin: 5px 0 0;
+      font-size: 14px;
+      opacity: 0.95;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      text-align: center;
+      color: #0072ff;
+      margin: 20px 0 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    .question {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #43cea2, #185a9d);
+      color: #fff;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .options button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+
+    .score {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #0072ff;
+    }
+
+    .restart-btn {
+      margin-top: 20px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .popup-content {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      max-width: 400px;
+      animation: pop 0.4s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .popup-content h2 {
+      margin-top: 0;
+    }
+
+    .popup-content button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #0072ff;
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="banner">
+      <h2>Cyberbullying Cremators</h2>
+      <p>PBA Digital Safety Quiz Game</p>
+    </div>
+    <h1>Cyberbullying Awareness Game</h1>
+    <div class="subtitle">Choose the safest and smartest response</div>
+    <div id="question" class="question"></div>
+    <div class="options" id="options"></div>
+    <div class="score" id="score"></div>
+  </div>
+
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      <h2 id="popup-title"></h2>
+      <p id="popup-text"></p>
+      <button onclick="closePopup()">Continue</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "Someone comments: 'You're so ugly' on your photo. What should you do?",
+        options: ["Ignore them", "Friend them", "Block and report them"],
+        answer: 2,
+        explanation: "Blocking and reporting stops the abuse and keeps you safe."
+      },
+      {
+        q: "You receive repeated rude messages from an unknown account.",
+        options: ["Reply angrily", "Block and report the account", "Share your password"],
+        answer: 1,
+        explanation: "Reporting helps platforms take action against cyberbullies."
+      },
+      {
+        q: "A classmate spreads a fake rumor about you online.",
+        options: ["Collect proof and tell a trusted adult", "Spread a rumor back", "Stay silent forever"],
+        answer: 0,
+        explanation: "Saving evidence and seeking help is the responsible choice."
+      },
+      {
+        q: "Someone threatens you in a game chat.",
+        options: ["Threaten them back", "Meet them in real life", "Report and mute them"],
+        answer: 2,
+        explanation: "Never engage. Report and mute to protect yourself."
+      },
+      {
+        q: "You see a friend being bullied online.",
+        options: ["Ignore it", "Support your friend and report the post", "Join the bully"],
+        answer: 1,
+        explanation: "Standing up and reporting helps stop cyberbullying."
+      },
+      {
+        q: "A stranger asks for your personal photos.",
+        options: ["Block and report", "Send them", "Ask for money"],
+        answer: 0,
+        explanation: "Never share personal content. Blocking is the safest action."
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const scoreEl = document.getElementById('score');
+    const popup = document.getElementById('popup');
+    const popupTitle = document.getElementById('popup-title');
+    const popupText = document.getElementById('popup-text');
+
+    function loadQuestion() {
+      const q = questions[current];
+      questionEl.textContent = `Q${current + 1}. ${q.q}`;
+      optionsEl.innerHTML = '';
+      q.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(index);
+        optionsEl.appendChild(btn);
+      });
+      scoreEl.textContent = `Score: ${score} / ${questions.length}`;
+    }
+
+    function checkAnswer(selected) {
+      const q = questions[current];
+      if (selected === q.answer) {
+        score++;
+        popupTitle.textContent = 'Correct Answer!';
+        popupText.textContent = q.explanation;
+      } else {
+        popupTitle.textContent = 'Incorrect Answer';
+        popupText.textContent = `Correct response: ${q.options[q.answer]}. ${q.explanation}`;
+      }
+      popup.style.display = 'flex';
+    }
+
+    function closePopup() {
+      popup.style.display = 'none';
+      current++;
+      if (current < questions.length) {
+        loadQuestion();
+      } else {
+        questionEl.textContent = 'Game Completed!';
+        optionsEl.innerHTML = `<p>You are now a smarter and safer digital citizen.</p><div style="text-align:center"><button class="restart-btn" onclick="restartGame()">Restart Quiz</button></div>`;
+        scoreEl.textContent = `Final Score: ${score} / ${questions.length}`;
+      }
+    }
+
+    loadQuestion();
+
+    function restartGame() {
+      current = 0;
+      score = 0;
+      loadQuestion();
+    }
+  </script>
+</body>
+</html>
